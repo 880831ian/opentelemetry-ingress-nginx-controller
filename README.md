@@ -90,7 +90,7 @@
 
 ## 結論
 
-透過 OpenTelemetry Collector 來收集 Ingress Nginx Controller 的 Metrics 與 Traces 並送到 Datadog 上，這樣就可以透過 Ingress Nginx Controller 的 Metrics 來做監控了，對於 RD 再開發上，有 Traces 也更方便 RD 他們找到程式的瓶頸 (有有可能是服務的)。
+透過 OpenTelemetry Collector 來收集 Ingress Nginx Controller 的 Metrics 與 Traces 並送到 Datadog 上，這樣就可以透過 Ingress Nginx Controller 的 Metrics 來做監控了，對於 RD 再開發上，有 Traces 也更方便 RD 他們找到程式的瓶頸 (有可能是服務的)。
 
 <br>
 
