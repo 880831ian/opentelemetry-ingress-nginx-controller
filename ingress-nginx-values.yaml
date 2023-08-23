@@ -39,8 +39,9 @@ controller:
     log-format-upstream:
       '{"timestamp": "$time_iso8601", "requestID": "$req_id", "proxyUpstreamName":
       "$proxy_upstream_name", "proxyAlternativeUpstreamName": "$proxy_alternative_upstream_name","upstreamStatus":
-      "$upstream_status", "upstreamAddr": "$upstream_addr", "trace_id": "$upstream_http_trace_id", "span_id": "$upstream_http_span_id", "httpRequest":{"requestMethod":
-      "$request_method", "requestUrl": "$host$request_uri", "status": $status,"requestSize":
+      "$upstream_status", "upstreamAddr": "$upstream_addr", "dd.trace_id": "$upstream_http_traceId", "dd.span_id": "$upstream_http_spanId",
+      "trace_id": "$upstream_http_traceId", "span_id": "$upstream_http_spanId",
+      "httpRequest":{"requestMethod":"$request_method", "requestUrl": "$host$request_uri", "status": $status,"requestSize":
       "$request_length", "responseSize": "$upstream_response_length", "userAgent": "$http_user_agent",
       "remoteIp": "$remote_addr", "referer": "$http_referer", "latency": "$upstream_response_time s",
       "protocol":"$server_protocol"}}'

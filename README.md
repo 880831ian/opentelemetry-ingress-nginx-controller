@@ -16,7 +16,7 @@
   Ingress Nginx Controller 的設定檔，這邊的 podAnnotations 是為了讓 Ingress Nginx Controller 的 Pod 能夠透過 Datadog agent 收集 metrics 到 Datadog 才加上的。
 
   config 裡面的設定有很多，主要都是 openTelemetry 的設定，要注意的是 enable-opentelemetry 要設為 true，另外 otlp-collector-host 以及 otlp-collector-port 要送到哪個 collector 等等也要記得設定。
-  另外如果想要將 LOG 與 Trace 串再一起，記得要把 log-format 設為 json，並且帶入，trace_id 與 span_id。
+  另外如果想要將 LOG 與 Trace 串再一起，記得要把 log-format 設為 json，並且帶入，trace_id 與 span_id ( 這邊有多帶 dd.trace_id 是為了讓 datadog 可以自動串接 LOG & Trace )。
 
 - nginx.yaml：
   一個簡單的 Nginx 整套服務 (Deployment、Service、Ingress)，要注意的是 Ingress 需要設定 annotations kubernetes.io/ingress.class: nginx (這個是 Ingress Nginx Controller 的預設 class name)，才會被 Ingress Nginx Controller 接管 (才會有 Load Balancer 的 IP)
@@ -68,7 +68,7 @@
 
 <br>
 
-我們試著打 `http://nginx.example.com/`，查看一下 Datadog 的 LOG，看看是否有收到 Nginx 的 LOG (此收集 LOG 的方式是透過在 cluster 上安裝 Datadog 的 agent)，如下：
+我們試著打 `http://nginx.example.com/` (測試網址，需要先在 /etc/hosts 綁定 Ingress Nginx Controller 咬住的 Load Balancer IP)，查看一下 Datadog 的 LOG，看看是否有收到 Nginx 的 LOG (此收集 LOG 的方式是透過在 cluster 上安裝 Datadog 的 agent)，如下：
 
 <br>
 
@@ -84,13 +84,29 @@
 
 <br>
 
-由於我們在後面目前沒有串其他服務，所以只有一個 span，之後還有另外兩篇文章是介紹如何串其他服務，可以參考看看：[opentelemetry-roadrunner](https://github.com/880831ian/opentelemetry-roadrunner)、[opentelemetry-nodejs](https://github.com/880831ian/opentelemetry-nodejs)
+由於我們在後面目前沒有串其他服務，所以只有一個 span，之後還有另外兩篇文章是介紹如何串其他服務 (會增加服務以及部分設定)，可以參考看看：[opentelemetry-roadrunner](https://github.com/880831ian/opentelemetry-roadrunner)、[opentelemetry-nodejs](https://github.com/880831ian/opentelemetry-nodejs)
+
+<br>
+
+順便看一下透過 Datadog Agent 收集的 Ingress Nginx Controller 的 Metrics，如下：
+
+<br>
+
+![圖片](https://raw.githubusercontent.com/880831ian/opentelemetry-ingress-nginx-controller/master/images/4.png)
+
+<br>
+
+可以用這些 Metrics 來做 Dashboard，如下：
+
+<br>
+
+![圖片](https://raw.githubusercontent.com/880831ian/opentelemetry-ingress-nginx-controller/master/images/5.png)
 
 <br>
 
 ## 結論
 
-透過 OpenTelemetry Collector 來收集 Ingress Nginx Controller 的 Metrics 與 Traces 並送到 Datadog 上，這樣就可以透過 Ingress Nginx Controller 的 Metrics 來做監控了，對於 RD 再開發上，有 Traces 也更方便 RD 他們找到程式的瓶頸 (有可能是服務的)。
+透過 OpenTelemetry Collector 來收集 Ingress Nginx Controller 的 Metrics 與 Traces 並送到 Datadog 上，這樣就可以透過 Ingress Nginx Controller 的 Metrics 來做監控了，對於 RD 再開發上，有 Traces 也更方便 RD 他們找到程式的瓶頸 (有可能是服務導致的)。
 
 <br>
 
